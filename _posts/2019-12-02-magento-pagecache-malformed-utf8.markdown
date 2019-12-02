@@ -1,9 +1,9 @@
 ---
 layout: default
-title:  "Magento Page Cache : Unable to serialize value. Error: Malformed UTF-8 characters, possibly incorrectly encoded"
+title:  "Magento2 Page Cache : Unable to serialize value. Malformed UTF-8 characters, possibly incorrectly encoded"
 date:   2019-12-02 09:00:00 +0200
-categories: [magento, debugging, UTF-8]
-permalink: /:year/:month/:day/:title/
+categories: [magento2]
+tags: [debugging, UTF-8, grep]
 ---
 
 If you're using Magento's Full Page Cache module, you may encounter that exception :
@@ -35,29 +35,29 @@ The error appears to come from a plugin from the Page Cache Magento module.
 Let edit the plugin a bit to make it log the problematic string (don't forget to roll back the modification after the debug session) :
 
 {% highlight php %}
-	# \Magento\PageCache\Model\Controller\Result\BuiltinPlugin::afterRenderResult
-	# defined of vendor/magento/module-page-cache/Model/Controller/Result/BuiltinPlugin.php
-	# Line 96
-	try {
-		$this->kernel->process($response);
-	} catch (\Exception|\Error $e) {
-	    file_put_contents("PROJECT/var/log/pagecache-" . time(), (string)$response);
-	    throw $e;
-	}
+    # \Magento\PageCache\Model\Controller\Result\BuiltinPlugin::afterRenderResult
+    # defined of vendor/magento/module-page-cache/Model/Controller/Result/BuiltinPlugin.php
+    # Line 96
+    try {
+        $this->kernel->process($response);
+    } catch (\Exception|\Error $e) {
+        file_put_contents("PROJECT/var/log/pagecache-" . time(), (string)$response);
+        throw $e;
+    }
 {% endhighlight %}
 
 You'll get the HTML that was fetched from the cache logged to var/log/pagecache- followed by the current timestamp.
 Now we can use grep that log to print the lines that contains invalid UTF-8 characters :
 
 {% highlight shell %}
-	$ grep -axv '.*'  var/log/pagecache-1575036624
-	</script><meta name="description" content="Something went wrong with my descripti">
+    $ grep -axv '.*'  var/log/pagecache-1575036624
+    </script><meta name="description" content="Something went wrong with my descripti">
 {% endhighlight %}
 
 Seems the rendering of our meta description is responsible for the crash. Now let's go to the code that prints that tag:
 
 {% highlight php %}
-	<?php substr($description, 0, 150); ?> 
+    <?php substr($description, 0, 150); ?> 
 {% endhighlight %}
 
 substr truncates the string regardless the encoding. Usually characters are encoded with a single byte, but UTF-8 character may be composed of two, three or even four bytes.
@@ -65,7 +65,7 @@ Using substr here works only works if the 150th byte is not part of a multibyte 
 
 Replacing substr with [mb_substr][mb_substr (PHP Doc)] solves the problem :
 {% highlight php %}
-	<?php mb_substr($description, 0, 150); ?> 
+    <?php mb_substr($description, 0, 150); ?> 
 {% endhighlight %}
 
 [mb_substr (PHP Doc)]: https://www.php.net/manual/fr/function.mb-substr.php
