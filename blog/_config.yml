@@ -1,7 +1,7 @@
 title: Aurélien Rivière
 description: >-
         Development notes and debuging tips.
-baseurl: ""
+baseurl: "/blog"
 url: "https://ariviere.github.io"
 
 theme: minima
