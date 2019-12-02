@@ -26,7 +26,7 @@ If you open /var/report/300877676469, changes are you get a message like that :
       #5 Magento\\Framework\\View\\Result\\Page\\Interceptor->renderResult(&Magento\\Framework\\App\\Response\\Http\\Interceptor#000000004d559138000000002f5a6de4#) called at [vendor/magento/framework/App/Http.php:141]\n
       #6 Magento\\Framework\\App\\Http->launch() called at [vendor/magento/framework/App/Bootstrap.php:261]\n
       #7 Magento\\Framework\\App\\Bootstrap->run(&Magento\\Framework\\App\\Http\\Interceptor#000000004d559136000000002f5a6de4#) called at [index.php:39]\n</pre>",
-  "url": "/parfum-4711-4711-eau-de-cologne-mixte-7342504005",
+  "url": "/my-super-page",
   "script_name": "/index.php"
 }
 {% endhighlight %}
@@ -63,7 +63,7 @@ Seems the rendering of our meta description is responsible for the crash. Now le
 substr truncates the string regardless the encoding. Usually characters are encoded with a single byte, but UTF-8 character may be composed of two, three or even four bytes.
 Using substr here works only works if the 150th byte is not part of a multibyte character, and won't behave as expected (but won't cause a crash) if the string contains multibyte characters before the 150th byte.
 
-Replacing substr with [mb_substr][mb_substr (PHP Doc)] solves the problem :
+Replacing substr by [mb_substr][mb_substr (PHP Doc)] solves the problem :
 {% highlight php %}
     <?php mb_substr($description, 0, 150); ?> 
 {% endhighlight %}
