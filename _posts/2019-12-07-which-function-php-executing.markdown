@@ -209,7 +209,7 @@ Cannot access memory at address 0x8
 Don't worry about the error on the last line, the macro is greatly perfectible, and doesn't handle the case prev_execute_data == NULL.
 Actually, there are plenty of situations the macro doesn't handle well: include, require, eval for instance. It may also not support generators and traits correctly but I never tested its behavior in these situations.
 
-### Make things simple
+### Making things simple
 
 To avoid typing the macro everytime you need it, you can simply create the file _~/.gdbinit_ containing the macro:
 ```
