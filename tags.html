@@ -28,16 +28,15 @@ title: Tags
     {% for post in site.posts %}
       {% if post.tags contains tag %}
         <li>
-          <h3>
-            <a href="{{ post.url }}">
-              {{ post.title }}
-              <small>{{ post.date | date_to_string }}</small>
-            </a>
+          <h4>
+            <a href="{{ post.url }}">{{ post.title }}</a>
+            <br>
+	    <small>{{ post.date | date_to_string }}</small>
             <br>
             Categories: {{ post.categories | join:' | '}}
             <br>
             Tags: {{ post.tags | join:' | ' }}
-          </h3>
+          </h4>
         </li>
       {% endif %}
     {% endfor %}
