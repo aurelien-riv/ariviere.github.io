@@ -1,12 +1,14 @@
 title: Aurélien Rivière
 description: >-
-        Development notes and debuging tips.
+        Development notes and debugging tips.
 baseurl: ""
 url: "https://aurelien-riv.github.io"
+github_username: aurelien-riv
 
 theme: minima
 plugins:
   - jekyll-feed
+
 
 # Exclude from processing.
 # The following items will not be processed, by default.

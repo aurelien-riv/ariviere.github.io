@@ -125,7 +125,7 @@ $4 = {
 * func.common.function_name : The function or method name
 * func.common.scope.name : The class name (no matter it is a static method or not)
 * This : As you may guess, $this.
-* prev_execute_data : The previous execute_data entry of the linked list, usefull to build a stack trace.
+* prev_execute_data : The previous execute_data entry of the linked list, useful to build a stack trace.
 
 ### String representation
 
