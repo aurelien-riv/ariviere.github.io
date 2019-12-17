@@ -129,10 +129,10 @@ $4 = {
 
 ### String representation
 
-As you may know, strings in C are array of chars, or char *. When GDB prints a string by itself, it actually doesn't know the variable is an array of characters and only prints the first character.
+As you may know, strings in C are array of chars, or char \*. When GDB prints a string by itself, it actually doesn't know the variable is an array of characters and only prints the first character.
 To make it print the real string, use print (char*) followed by the entry name.
 
-However, don't rely to much on having char * directly on PHP source code. Strings are zend_string or even smart_str, themselves using zend_string. To get the value of a zend_string, you'll need to access its member "val". 
+However, don't rely too much on having char \* directly on PHP source code. Strings are zend_string or even smart_str, themselves using zend_string. To get the value of a zend_string, you'll need to access its member "val". 
 
 To wrap that up, to get the function name as string, you'll have to type:
 ``` 
@@ -156,7 +156,7 @@ $17 = 0x7fe4fc0799b8 "getUniqueName"
 
 ## How to get a real stack trace?
 
-If you have tens calls in your stack, appending more and more prev_execute_data in the prints is going to be painful (and even worst when using frameworks that generate interceptors and proxies as Magento does!). But don't worry, we can make macros in GDB!
+If you have tens calls in your stack, appending more and more prev_execute_data in the print-s is going to be painful (and even worst when using frameworks that generate interceptors and proxies as Magento does!). But don't worry, we can make macros in GDB!
 
 ```
 (gdb) define phpbt
@@ -207,11 +207,11 @@ Cannot access memory at address 0x8
 ```
 
 Don't worry about the error on the last line, the macro is greatly perfectible, and doesn't handle the case prev_execute_data == NULL.
-Actually, there are plenty of situations the macro doesn't handle well: include, require, eval for instance. It may also not support generators and traits correctly but I never tested its behavior in these situations.
+Actually, there are plenty of situations the macro doesn't handle well: include, require, eval for instance. It may also not support generators and traits correctly but I never tested its behaviour in these situations.
 
 ### Making things simple
 
-To avoid typing the macro everytime you need it, you can simply create the file _~/.gdbinit_ containing the macro:
+To avoid typing the macro every time you need it, you can simply create the file _~/.gdbinit_ containing the macro:
 ```
 define phpbt
   set $ed=executor_globals.current_execute_data

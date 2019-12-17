@@ -63,7 +63,7 @@ Seems the rendering of our meta description is responsible for the crash. Now le
 {% endhighlight %}
 
 substr truncates the string regardless the encoding. Usually characters are encoded with a single byte, but UTF-8 character may be composed of two, three or even four bytes.
-Using substr here works only works if the 150th byte is not part of a multibyte character, and won't behave as expected (but won't cause a crash) if the string contains multibyte characters before the 150th byte.
+Using substr here works only works if the 150th byte is not part of a multi-byte character, and won't behave as expected (but won't cause a crash) if the string contains multi-byte characters before the 150th byte.
 
 Replacing substr by [mb_substr][mb_substr (PHP Doc)] solves the problem :
 {% highlight php %}

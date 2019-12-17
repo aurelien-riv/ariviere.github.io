@@ -72,7 +72,7 @@ class AdaptUrlRewritesToVisibilityAttribute
 }
 {% endhighlight %}
 
-The observer loads all the products given by $productIds arguments, to iterate on them. Then, the behavior depends on the $visibility argument.
+The observer loads all the products given by $productIds arguments, to iterate on them. Then, the behaviour depends on the $visibility argument.
 
 * If $visibility !== VISIBILITY_NOT_VISIBLE (= VISIBILITY_IN_CATALOG, VISIBILITY_IN_SEARCH or VISIBILITY_BOTH), then it will build the url and insert or update url_rewrite accordingly.
 * Otherwise, it will delete all the url_rewrites for the given products are they are no longer visible directly on the website.
@@ -81,7 +81,7 @@ See the problem ? When an article is visible, it is legitimate it loads the prod
 
 ## Let speed that up!
 
-Now, we will write a plugin around the execute method of AdaptUrlRewritesToVisibilityAttribute, that won't interfere with the base behavior when dealing with visible products, but will make the hiding really fast.
+Now, we will write a plugin around the execute method of AdaptUrlRewritesToVisibilityAttribute, that won't interfere with the base behaviour when dealing with visible products, but will make the hiding really fast.
 Don't forget to add the registration.php and module.xml, and to enable the module so that everything works well.
 
 ### The PHP code
