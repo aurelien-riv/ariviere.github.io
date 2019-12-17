@@ -13,13 +13,13 @@ Magento uses many cache types by default: layout, reflection, block_html... and 
 
 However, it cannot cache every pages: what would happen if you try to cache the whole customer account page? 
 
-First, when a page is cacheable and FPC enabled, Magento's models that hold the session are impersonated, which mean you won't serve another customer's data on your cache, **except** if you use $\_SESSION. That behavior avoids data leaks but also leads to weird behaviors once in production if your site is not well tested (as you don't use FPC on your development machine). 
+First, when a page is cacheable and FPC enabled, Magento's models in charge of holding the session data are impersonated, which mean you won't serve another customer's data on your cache, **except** if you use $\_SESSION. That behavior avoids data leaks but also leads to weird behaviors once in production if your site is not well tested (as you don't use FPC on your development machine). 
 
-Then, there are by default non cacheable blocks on that page, that prevents FPC to do its work. Customer account page won't be cached by default, but your custom pages will be.
+Then, there are by default non cacheable blocks on that page, preventing FPC to do its work. Customer account page won't be cached by default, but your custom pages will be.
 
 ### How to make a page non cacheable?
 
-As long as at least one block on your page is not cacheable, the whole page is not eligible to FPC. But, beware, if your block says its cache key or cache lifetime is null, it won't be cached on **block\_html** cache, but FPC will still cache the page.
+As long as at least one non cacheable block on your page, the whole page is not eligible to FPC. But, beware, if your block says its cache key or cache lifetime is null, it won't be cached on **block\_html** cache, but FPC will still cache the page.
 
 To prevent full page caching, your block **must** set the cacheable attribute to false in its layout's XML file!
 
