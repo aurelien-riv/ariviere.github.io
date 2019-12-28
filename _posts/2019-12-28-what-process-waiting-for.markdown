@@ -8,7 +8,7 @@ tags: [debugging, strace, procfs, php-src]
 
 # How to know what PHP (or any process) is waiting for?
 
-In a previous post, we saw [how to use GDB to get the backtrace of a PHP process on demand][2019-12-07-which-function-php-executing]. If you can use GDB on the machine that is executing PHP, that's great as the informations you get are very accurate, but what if you need to understand what's happening on a production server? No doubts your PHP binary will be optimized, debugging symbols will be stripped and your system administrator won't agree to install GDB on that machine. That time, I will propose a way to identify blocking I/O, for PHP or any processes.
+In a previous post, we saw [how to use GDB to get the backtrace of a PHP process on demand][2019-12-07-which-function-php-executing]. If you can use GDB on the machine that is executing PHP, that's great as the information you get are very accurate, but what if you need to understand what's happening on a production server? No doubts your PHP binary will be optimized, debugging symbols will be stripped and your system administrator won't agree to install GDB on that machine. That time, I will propose a way to identify blocking I/O, for PHP or any processes.
 
 These steps will probably only work on Linux systems. It may also work on others Unix-like systems, such as OpenBSD, FreeBSD and so on, with a few adaptations.
 
@@ -16,7 +16,7 @@ These steps will probably only work on Linux systems. It may also work on others
 
 First, we use the ps (or pgrep, htop...) command to get the pid of the process we want to debug.
 
-In the [previous post][2019-12-07-which-function-php-executing], I told you to look at the ones that have "R" in their status column, as they are problably the one you want as they are running, contrary to sleeping FPM process that are waiting for a request, even if the process you wanted may also be sleeping at the moment you look at them. Here, we want to know what a process is waiting for, assuming it is waiting for I/O, so our process should be in the "S" state.
+In the [previous post][2019-12-07-which-function-php-executing], I told you to look at the ones that have "R" in their status column, as they are probably the one you want as they are running, contrary to sleeping FPM process that are waiting for a request, even if the process you wanted may also be sleeping at the moment you look at them. Here, we want to know what a process is waiting for, assuming it is waiting for I/O, so our process should be in the "S" state.
 
 ```
 # ps aux | grep php
@@ -73,7 +73,7 @@ You can get more information on these system calls with the command "man 2 " fol
 
 #### System call arguments
 
-After the name of the calls, you can see its arguments. It may seem cryptic but you can extract interesting informations there.
+After the name of the calls, you can see its arguments. It may seem cryptic but you can extract interesting information there.
 
 For instance, if you look at sendto calls, we can see that its second arguments looks to a truncated SQL query. 
 
@@ -98,7 +98,7 @@ lrwx------ 1 www-data www-data 64 déc.  16 10:59 8 -> 'socket:[44820191]'
 Both file descriptors 7 and 8 are symlinks to a socket. But what are these socket files that appear to be broken links?
 
 ## Step 4: resolving the socket id
-We now need to get the protocol, the ip address and the port used (if any).
+We now need to get the protocol, the IP address and the port used (if any).
 
 ```
 # grep -e 39255092 -e 44820191 /proc/net/ -r
@@ -108,7 +108,7 @@ We now need to get the protocol, the ip address and the port used (if any).
 
 File /proc/net/tcp matched, so we know these connections were TCP sockets.
 
-0271A8C0, 8E2FD334 and 0471A8C0 are ip addresses, DE7C, BD0C, 01BB and 0CEA are port numbers. Let turn the hexadecimal ip address values into a more convenient representation:
+0271A8C0, 8E2FD334 and 0471A8C0 are IP addresses, DE7C, BD0C, 01BB and 0CEA are port numbers. Let turn the hexadecimal IP address values into a more convenient representation:
 ```
 $ printf '%d.%d.%d.%d\n' $(echo 0271A8C0 | sed 's/../0x& /g')
 2.113.168.192
@@ -121,13 +121,13 @@ Network address are inverted, so 2.113.168.192 means 192.168.113.2.
 
 I had one SQL query on 192.168.113.2:3306, and another tcp connection on 78.127.211.53:443, probably an HTTPS request.
 
-## Step 5: Getting some informations related to a network operation
+## Step 5: Getting some information related to a network operation
 Let ignore the 3306 query, I already know my MySQL server. However, I don't know that IP address.
 
-### State of the connexion
+### State of the connection
 There were two IP addresses and ports per line on /proc/net/tcp, the second couple is the remote IP and port, and the first one is local.
 
-To get some informations on that connexion, using the local port number is easier as it is unique.
+To get some information on that connection, using the local port number is easier as it is unique.
 
 DE7C<sub>(16)</sub>=56956<sub>(10)</sub>.
 
@@ -146,7 +146,7 @@ $ nslookup 78.127.211.53
 Seems like the service is hosted at AWS... or not as that IP address is a random one ;)
 
 ### TLS certificate
-We may also get some informations from the TLS certificate is the service is using HTTPS:
+We may also get some information from the TLS certificate is the service is using HTTPS:
 ```
 $ openssl s_client 78.127.211.53:443
 ```
