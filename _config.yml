@@ -1,12 +1,14 @@
-title: Aurélien Rivière
-description: Development notes and debugging tips.
+title: "Aurélien Rivière"
+description: "Development notes and debugging tips."
 baseurl: ""
 url: "https://aurelien-riv.github.io"
 
 google_analytics: UA-121175470-2
 
+gitlab_username: aurelien-riv
 github_username: aurelien-riv
 linkedin_username: aurelien-riviere
+rss: /feed.xml
 
 theme: minima
 plugins:
