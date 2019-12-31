@@ -81,6 +81,12 @@ Its first argument is "7" and if you open the manual (man 2 sendto), you see tha
 
 According to the syscalls that are made, other arguments may be interesting, but you may need the manual to know which one are important to you.
 
+#### System call return value
+
+The last part of each line is the value returned by the calls. 
+
+Sometimes, strace knows the meaning of a status code and adds the information to the line, as for poll whose value 0 means Timeout. Otherwise, you have to check the manual for the explanation.
+
 ### What is wrong with my process?
 
 According to the first capture, PHP sends SQL queries through the socket number 7, and waits for 5 seconds, but on my second capture we can see my process is polling indefinitely on the file descriptor 8. We found the file descriptor that blocks our process, but we still don't know what it represents exactly.
