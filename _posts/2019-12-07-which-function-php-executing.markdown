@@ -216,7 +216,13 @@ To avoid typing the macro every time you need it, you can simply create the file
 define phpbt
   set $ed=executor_globals.current_execute_data
   while $ed
-    print {(char*)((zend_execute_data *)$ed)->func.common.scope.name.val, (char*)((zend_execute_data *)$ed)->func.common.function_name.val}
+    set $scope=((zend_execute_data *)$ed)->func.common.scope
+    set $funcname=((zend_execute_data *)$ed)->func.common.function_name.val
+    if $scope
+      print {(char*)$scope.name.val, (char*)$funcname}
+    else
+      print {(char*)$funcname}
+    end
     set $ed = ((zend_execute_data *)$ed)->prev_execute_data
   end
 end
