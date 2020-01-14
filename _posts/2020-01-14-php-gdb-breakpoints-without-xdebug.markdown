@@ -1,14 +1,16 @@
+---
+layout: default
+title: "Debugging PHP: Set breakpoints on PHP code using a C debugger"
+date: 2020-01-14 20:30:00 +0200
+categories: [php]
+tags: [debugging, php-src, GDB]
+---
+
 # How to set a breakpoint on PHP without XDebug?
 
 What do you do when you have to debug a PHP process without a PHP debugger? 
 Die and var\_dump probably... or file\_put\_contents if you want to avoid crashing the site. 
-Maybe there is another solution that doesn't implies altering the site, why not using a C debugger?
-
-It may seem weird at the first glance, why would you install a C debugger on your server executing PHP, in order to install PHP, why not simply install (and configure) XDebug?
-
-First, because I already explained how [GDB can help understanding what PHP's doing]. 
-
-Then, because a PHP debugger adds an overhead to all the processes, contrary to a C debugger which will alter the process it is connected to.
+Maybe there is another solution... why not using a C debugger?
 
 ## Limitations
 Contrary to XDebug, these instructions don't permit (yet?) to add conditions based on variable values to your breakpoints. We could, but the conditions would be really complex as 
@@ -16,10 +18,19 @@ Contrary to XDebug, these instructions don't permit (yet?) to add conditions bas
 * we would have to handle properly the value we get, and the process is not the same depending on the data type (object, array, string, int, ...) ;
 * we would have to repeat the operation on array and object items, which increases the complexity again
 
+Web processes won't wait for you to attach them with GDB, so you'll have to guess which one is yours, and by attaching it while it runs, it may already be too late when you attach it. Plus, attaching the wrong one will pause the loading of someone else's process, maybe one of a customer. However, CLI applications can be started from GDB, so you can put your breakpoints before the PHP binary is launched.
+
 ## Advantages
 XDebug is limited to user defined functions and methods. Using GDB, we can break on "internal" functions (such as file\_exists) and methods (such as PDOStatement::execute), which are defined inside PHP or its modules.
 
+Contrary to XDebug, only the attached process suffers from performance degradation, instead of all of them.
+
+Using a debugger avoids altering the source code to understand what a process does.
+
 ## GDB instructions
+
+Earlier, I wrote a post to explain [how to get the current php backtrace using GDB][2019-12-07-which-function-php-executing]. Please read it before you carry on as it gave you a macro definition for "phpbt" (used in the examples) and explained some members of the zend\_execute\_data structure.
+
 ### Break on a function
 ```
 break execute_ex if \
@@ -57,7 +68,6 @@ break execute_internal if \
         $_streq((char *)(((zend_execute_data *)executor_globals.current_execute_data)->func.common.function_name.val), "method_name") && \
         $_streq((char *)(((zend_execute_data *)executor_globals.current_execute_data)->func.common.scope.name.val), "Class\\Name")
 ```
-
 
 ## Examples
 ### Break on a method
@@ -122,3 +132,5 @@ $5 = {0x18 <error: Cannot access memory at address 0x18>}
 $6 = {0x18 <error: Cannot access memory at address 0x18>}
 $7 = {0x18 <error: Cannot access memory at address 0x18>}
 ```
+
+[2019-12-07-which-function-php-executing]: {% post_url 2019-12-07-which-function-php-executing %}       
