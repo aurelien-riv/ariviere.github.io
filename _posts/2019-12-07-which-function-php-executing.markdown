@@ -16,6 +16,8 @@ As you may know, PHP is written in C, so we will debug it as any C application. 
 
 **⚠️  PHP has to be compiled with debugging symbol so everything works!**
 
+**⚠️  These instructions won't work before PHP7, and may stop working on future versions.**
+
 ## Get the PID of your PHP process
 
 Using _ps_, let list running PHP processes :

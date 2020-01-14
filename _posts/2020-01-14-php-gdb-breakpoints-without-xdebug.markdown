@@ -31,6 +31,8 @@ Using a debugger avoids altering the source code to understand what a process do
 
 Earlier, I wrote a post to explain [how to get the current php backtrace using GDB][2019-12-07-which-function-php-executing]. Please read it before you carry on as it gave you a macro definition for "phpbt" (used in the examples) and explained some members of the zend\_execute\_data structure.
 
+**⚠️  These instructions won't work before PHP7, and may stop working on future versions.**
+
 ### Break on a function
 ```
 break execute_ex if \
