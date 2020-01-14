@@ -10,24 +10,7 @@ excerpt: Sometimes you need to debug a PHP process without XDebug and you use va
 
 # How to set a breakpoint on PHP without XDebug?
 
-What do you do when you have to debug a PHP process without a PHP debugger? 
-Die and var\_dump probably... or file\_put\_contents if you want to avoid crashing the site. 
-Maybe there is another solution... why not using a C debugger?
-
-## Limitations
-Contrary to XDebug, these instructions don't permit (yet?) to add conditions based on variable values to your breakpoints. We could, but the conditions would be really complex as 
-* we would have to fetch the variable or argument from internal structures, which is not trivial ;
-* we would have to handle properly the value we get, and the process is not the same depending on the data type (object, array, string, int, ...) ;
-* we would have to repeat the operation on array and object items, which increases the complexity again
-
-Web processes won't wait for you to attach them with GDB, so you'll have to guess which one is yours, and by attaching it while it runs, it may already be too late when you attach it. Plus, attaching the wrong one will pause the loading of someone else's process, maybe one of a customer. However, CLI applications can be started from GDB, so you can put your breakpoints before the PHP binary is launched.
-
-## Advantages
-XDebug is limited to user defined functions and methods. Using GDB, we can break on "internal" functions (such as file\_exists) and methods (such as PDOStatement::execute), which are defined inside PHP or its modules.
-
-Contrary to XDebug, only the attached process suffers from performance degradation, instead of all of them.
-
-Using a debugger avoids altering the source code to understand what a process does.
+Sometimes, you'd like to put a breakpoint on a PHP program, but you can't, maybe simply because you don't have a PHP debugger installed, or maybe because the function you want to break on is defined inside PHP itself. I'll show you a way to define your breakpoints using GDB, a C debugger. And if that idea sounds weird to you, maybe you should read that blog post: [should you use a C debugger to debug PHP?][2020-01-14-php-why-should-you-use-c-debugger].
 
 ## GDB instructions
 
@@ -137,4 +120,5 @@ $6 = {0x18 <error: Cannot access memory at address 0x18>}
 $7 = {0x18 <error: Cannot access memory at address 0x18>}
 ```
 
+[2020-01-14-php-why-should-you-use-c-debugger]: {% post_url 2020-01-14-php-why-should-you-use-c-debugger %}
 [2019-12-07-which-function-php-executing]: {% post_url 2019-12-07-which-function-php-executing %}       
