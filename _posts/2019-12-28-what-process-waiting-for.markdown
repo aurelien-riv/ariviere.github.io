@@ -4,11 +4,14 @@ title: "Debugging PHP: What is my process waiting for?"
 date: 2019-12-28 19:30:00 +0200
 categories: [php]
 tags: [debugging, strace, procfs, php-src]
+description: Your process (no matter the language it uses) seems to be stuck and you're running on Linux? I give you a 5 steps way to know what it is waiting for.
 ---
 
 # How to know what PHP (or any process) is waiting for?
 
 In a previous post, we saw [how to use GDB to get the backtrace of a PHP process on demand][2019-12-07-which-function-php-executing]. If you can use GDB on the machine that is executing PHP, that's great as the information you get are very accurate, but what if you need to understand what's happening on a production server? No doubts your PHP binary will be optimized, debugging symbols will be stripped and your system administrator won't agree to install GDB on that machine. That time, I will propose a way to identify blocking I/O, for PHP or any processes.
+
+Nothing here but the examples are specific to PHP, a Python or a C program will give you similar outputs. 
 
 These steps will probably only work on Linux systems. It may also work on others Unix-like systems, such as OpenBSD, FreeBSD and so on, with a few adaptations.
 

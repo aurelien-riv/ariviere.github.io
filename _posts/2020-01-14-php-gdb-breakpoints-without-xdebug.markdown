@@ -4,6 +4,7 @@ title: "Debugging PHP: Set breakpoints on PHP code using a C debugger"
 date: 2020-01-14 20:30:00 +0200
 categories: [php]
 tags: [debugging, php-src, GDB]
+description: Sometimes you need to debug a PHP process without XDebug and you use var_dump and die. I show you a wait to emulate XDebug using GDB.
 ---
 
 # How to set a breakpoint on PHP without XDebug?

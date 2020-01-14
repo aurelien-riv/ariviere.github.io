@@ -4,6 +4,7 @@ title:  "Magento2 Page Cache : Unable to serialize value. Malformed UTF-8 charac
 date:   2019-12-02 09:00:00 +0200
 categories: [magento2]
 tags: [debugging, UTF-8, grep, magento-module-page-cache]
+description: Invalid (maybe truncated) UTF-8 characters will break FPC. I give you a wait to identify the guilty character only using grep.
 ---
 
 # How to fix Magento2 Page Cache error: "Unable to serialize value. Malformed UTF-8 characters"
