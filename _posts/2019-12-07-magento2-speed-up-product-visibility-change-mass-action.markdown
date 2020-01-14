@@ -5,6 +5,7 @@ date: 2019-12-07 12:00:00 +0200
 categories: [magento2]
 tags: [optimization]
 description: Changing the visibility of many products to NOT_VISIBLE is really slow because of a badly written observer in Magento. I propose you a plugin upon that observer to make it very fast.
+excerpt: Changing the visibility of many products to NOT_VISIBLE is really slow because of a badly written observer in Magento. I propose you a plugin upon that observer to make it very fast.
 ---
 
 # Magento2 : Why is hiding products that slow and how to make it really fast?

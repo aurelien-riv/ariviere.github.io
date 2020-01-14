@@ -2,6 +2,7 @@ title: "Aurélien Rivière"
 description: "Development notes and debugging tips."
 baseurl: ""
 url: "https://aurelien-riv.github.io"
+show_excerpts: true
 
 google_analytics: UA-121175470-2
 

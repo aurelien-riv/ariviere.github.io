@@ -5,6 +5,7 @@ date: 2019-12-07 15:00:00 +0200
 categories: [php]
 tags: [debugging, GDB, php-src]
 description: You have a PHP7 program running and not responding? I gonna tell you how to use GDB to print you process' stack trace at any time! 
+excerpt: You have a PHP7 program running and not responding? I gonna tell you how to use GDB to print you process' stack trace at any time! 
 ---
 
 # How to know which function PHP is currently executing and get its stack trace?

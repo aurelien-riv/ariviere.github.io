@@ -5,6 +5,7 @@ date: 2019-12-15 15:20:00 +0200
 categories: [magento2]
 tags: [magento1]
 description: Magento2 has a strange directory structure inherited from Magento1. Can we get rid of that and organize our class better? It depends...
+excerpt: Magento2 has a strange directory structure inherited from Magento1. Can we get rid of that and organize our class better? It depends...
 ---
 
 # Can you use custom namespaces with Magento2?

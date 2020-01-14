@@ -5,6 +5,7 @@ date: 2019-12-28 19:30:00 +0200
 categories: [php]
 tags: [debugging, strace, procfs, php-src]
 description: Your process (no matter the language it uses) seems to be stuck and you're running on Linux? I give you a 5 steps way to know what it is waiting for.
+excerpt: Your process (no matter the language it uses) seems to be stuck and you're running on Linux? I give you a 5 steps way to know what it is waiting for.
 ---
 
 # How to know what PHP (or any process) is waiting for?

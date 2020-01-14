@@ -5,6 +5,7 @@ date: 2019-12-21 10:00:00 +0200
 categories: [magento2]
 tags: [performance, magento-module-page-cache]
 description: To improve your site speed, you should better use FPC. But are you sure you didn't broke it? I propose you a module to analyze your FPC's health.
+excerpt: To improve your site speed, you should better use FPC. But are you sure you didn't broke it? I propose you a module to analyze your FPC's health.
 ---
 
 # Is your Magento2 website full-page cacheable?
