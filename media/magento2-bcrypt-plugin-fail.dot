@@ -1,0 +1,13 @@
+digraph {
+	c1 [label="\\Magento\\Framework\\App\\Http"]
+	c2 [label="\\Magento\\Framework\\Event\\Manager"]
+	c3 [label="\\Magento\\Framework\\Event\\InvokerDefault"]
+	c4 [label="\\Magento\\Framework\\Logger\\Monolog"]
+	c5 [label="\\Magento\\Framework\\App\\Config"]
+	c5 [label="\\Magento\\Config\\App\\Config\\Type\\System"]
+	c6 [label="\\Magento\\Framework\\Encryption\\Encryptor"]
+	c7 [label="\\Magento\\Framework\\Cache\\Frontend\\Decorator\\Logger"]
+	c8 [label="\\Magento\\Framework\\Cache\\InvalidateLogger"]
+
+	c1 -> c2 -> c3 -> c4 -> c5 -> c6 -> c7 -> c8 -> c4
+}
