@@ -14,7 +14,7 @@ SUPEE-11219 security patch for Magento1 replaced the initial password hashing wi
 If you migrate your date from Magento 1 to Magento 2, either using Magento's *Data Migration Tool* 
 or UberTheme's *UB Data Migration Pro*, these bcrypt hashed passwords will be unusable with Magento2.
 
-An issue has been opened on GitHub, giving a solution, but with no applicable solution, here: https://github.com/magento/magento2/issues/26731.
+[An issue has been opened on GitHub][GitHub#26731], giving a solution, but with no applicable patch.
 
 If you need to fix it, unless you want to fork Magento, I see three solutions:
 
@@ -129,4 +129,6 @@ Thus, the logger will be created the first time it is really needed. To do that,
     </type>
 {% endhighlight %}
 
-Of course, don't forget to subscribe to Magento's issue \#26731 to remove that code once it's fixed in your Magento's version.
+Of course, don't forget to subscribe to [Magento's issue \#26731][GitHub#26731] to remove that code once it's fixed in your Magento's version.
+
+[GitHub#26731]: https://github.com/magento/magento2/issues/26731
