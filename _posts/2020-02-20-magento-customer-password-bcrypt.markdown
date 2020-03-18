@@ -22,7 +22,8 @@ If you need to fix it, unless you want to fork Magento, I see three solutions:
 * or you extend Encryptor and add a preference to your class so you redefine *isValidHash*
 * or you make a plugin on Encryptor, around *isValidHash*.
 
-I chose the last solution, which seemed easy to implement, but hid a bug.
+I chose the last solution, which seemed easy to implement, but hid a bug. 
+If you need to apply that fix, I strongly recommend you to patch the Encryptor using Composer, which, in that case, would be way easier and safer!
 
 # My solution
 
