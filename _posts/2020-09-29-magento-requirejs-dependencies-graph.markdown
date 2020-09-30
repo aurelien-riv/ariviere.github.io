@@ -31,6 +31,15 @@ In the console output expression, paste that snippet :
 
 Reload the page and copy the messages from your logpoint.
 
+### Report text/x-magento-init loaded scripts
+
+When the scripts are loaded using \<script type="text/x-magento-init"\> tags, it would be usefull to show in the graph why the were loaded, and the part of the DOM they are related to.
+
+We can get that piece of information by putting a logpoint on mage/apply/scripts.js on processElems(). Add that expression on the *if (selector === '\*')* line, before *addVirtual(components)* :
+{% highlight js %}
+'"' + selector + '" [shape=record];' + '"./mage-init" -> "' + selector + '" -> {"' + Object.keys(components).join('", "') + '"}'
+{% endhighlight %}
+
 ## Step two : formatting the dot file
 
 Create a text file, requirejs-graph.dot for instance, and open it. I recommend using vim or neovim for that as it recognize graphviz files out of the box.
@@ -48,9 +57,10 @@ graph [splines=polyline,ranksep=3]
 
 Then, remove any line that doesn't come from your logpoint.
 
-Finally, you'll have to remove the file, line and column indication (and maybe the timestamp) or the messages. In my case, I typed that command in vim to do so :
+Finally, you'll have to remove the file, line and column indication (and maybe the timestamp) or the messages. In my case, I typed these commands in vim to do so :
 ```
 :%s/require.js:1544:20//
+:%s/\d* scripts.js:64:12//
 ```
 
 ## Step three : bind mixins to their module
