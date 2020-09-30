@@ -26,7 +26,8 @@ Then, search for the method completeLoad and add a logpoint on *callGetModule(ar
 
 In the console output expression, paste that snippet :
 {% highlight js %}
-'"' + moduleName + '"' + (typeof args[1] !== "undefined" && args[1].length > 0 ? (" -> {\"" + args[1].join('\",\"') + "\"}") : "")
+'"' + moduleName + '"' + (typeof args[1] !== "undefined" && args[1].length > 0 ? (" -> {\"" + args[1].map(e => {let m = makeModuleMap(e, makeModuleMap(moduleName, null, false), false); return (m.prefix ? m.prefix + '!' : '') + m.name;}).join('\",\"') + "\"}") : "")
+
 {% endhighlight %}
 
 Reload the page and copy the messages from your logpoint.
@@ -47,7 +48,7 @@ Some scripts will be loaded automatically by RequireJS as they are present on re
 Open /pub/static/[...]/frontend/[THEME]/[LANG]/requirejs-config.js and on the line that contains require.config(config);, add the following logpoint :
 
 {% highlight js %}
-config.deps.length ? ('"requirejs.config.deps" [shape=octogon]; "requirejs.config.deps" -> {"' + config.deps.join('", "') + '"}') : ''
+config.deps.length ? ('"requirejs.config.deps" [shape=octagon]; "requirejs.config.deps" -> {"' + config.deps.join('", "') + '"}') : ''
 {% endhighlight %}
 
 ## Step two : formatting the dot file
@@ -79,7 +80,10 @@ Finally, you'll have to remove the file, line and column indication (and maybe t
 Relationships between mixins and the module they are associated are not reported by my logpoint expression, so we will fix that using grep :
 
 {% highlight sh %}
-grep -oE 'mixins[^\"]+' requirejs-graph.dot | sort | uniq | awk '{print "\""$1"\" -> \""substr($1, 8)"\""}'; echo '"domReady!" -> "domReady"'
+(
+    grep -oE 'mixins[^\"]+' js6.dot | sort | uniq | awk '{print "\""$1"\" [shape=house]; \""$1"\" -> \""substr($1, 8)"\""}'; 
+    echo '"domReady!" [shape=house]; "domReady!" -> "domReady"'
+)
 {% endhighlight %}
 
 Add the output of that command at the end of your file, before the last curly bracket. 
