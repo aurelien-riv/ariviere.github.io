@@ -40,6 +40,16 @@ We can get that piece of information by putting a logpoint on mage/apply/scripts
 '"' + selector + '" [shape=record];' + '"./mage-init" -> "' + selector + '" -> {"' + Object.keys(components).join('", "') + '"}'
 {% endhighlight %}
 
+### Highlight RequireJS-config deps
+
+Some scripts will be loaded automatically by RequireJS as they are present on requirejs-config.js's config['deps'] array.
+
+Open /pub/static/[...]/frontend/[THEME]/[LANG]/requirejs-config.js and on the line that contains require.config(config);, add the following logpoint :
+
+{% highlight js %}
+config.deps.length ? ('"requirejs.config.deps" [shape=octogon]; "requirejs.config.deps" -> {"' + config.deps.join('", "') + '"}') : ''
+{% endhighlight %}
+
 ## Step two : formatting the dot file
 
 Create a text file, requirejs-graph.dot for instance, and open it. I recommend using vim or neovim for that as it recognize graphviz files out of the box.
@@ -47,7 +57,7 @@ Create a text file, requirejs-graph.dot for instance, and open it. I recommend u
 On that file, you'll paste the logs here :
 
 {% highlight dot %}
-digraph {
+strict digraph {
 graph [splines=polyline,ranksep=3]
 
 // HERE
@@ -60,7 +70,8 @@ Then, remove any line that doesn't come from your logpoint.
 Finally, you'll have to remove the file, line and column indication (and maybe the timestamp) or the messages. In my case, I typed these commands in vim to do so :
 ```
 :%s/require.js:1544:20//
-:%s/\d* scripts.js:64:12//
+:%s/\d* scripts.js:63:12//
+:%s/requirejs-config.js:56//
 ```
 
 ## Step three : bind mixins to their module
