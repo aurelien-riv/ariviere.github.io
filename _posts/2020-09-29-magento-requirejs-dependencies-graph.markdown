@@ -63,6 +63,7 @@ graph [splines=polyline,ranksep=3]
 
 // HERE
 
+"domReady!" [shape=house]; "domReady!" -> "domReady"
 }
 {% endhighlight %}
 
@@ -80,10 +81,7 @@ Finally, you'll have to remove the file, line and column indication (and maybe t
 Relationships between mixins and the module they are associated are not reported by my logpoint expression, so we will fix that using grep :
 
 {% highlight sh %}
-(
-    grep -oE 'mixins[^\"]+' js6.dot | sort | uniq | awk '{print "\""$1"\" [shape=house]; \""$1"\" -> \""substr($1, 8)"\""}'; 
-    echo '"domReady!" [shape=house]; "domReady!" -> "domReady"'
-)
+grep -oE 'mixins[^\"]+' requirejs-graph.dot | sort | uniq | awk '{print "\""$1"\" [shape=house]; \""$1"\" -> \""substr($1, 8)"\""}'; 
 {% endhighlight %}
 
 Add the output of that command at the end of your file, before the last curly bracket. 
