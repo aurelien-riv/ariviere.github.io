@@ -27,10 +27,13 @@ Then, search for the method completeLoad and add a logpoint on *callGetModule(ar
 In the console output expression, paste that snippet :
 {% highlight js %}
 '"' + moduleName + '"' + (typeof args[1] !== "undefined" && args[1].length > 0 ? (" -> {\"" + args[1].map(e => {let m = makeModuleMap(e, makeModuleMap(moduleName, null, false), false); return (m.prefix ? m.prefix + '!' : '') + m.name;}).join('\",\"') + "\"}") : "")
-
 {% endhighlight %}
 
-Reload the page and copy the messages from your logpoint.
+But several modules can be located in the same file. To identify which ones implied a request, we can add that on the *req.load* function, a line 1897 for me :
+
+{% highlight js %}
+'"' + moduleName + '" [style="bold"];'
+{% endhighlight %}
 
 ### Report text/x-magento-init loaded scripts
 
@@ -53,6 +56,8 @@ config.deps.length ? ('"requirejs.config.deps" [shape=octagon]; "requirejs.confi
 
 ## Step two : formatting the dot file
 
+Reload the page and copy the messages from your logpoint.
+
 Create a text file, requirejs-graph.dot for instance, and open it. I recommend using vim or neovim for that as it recognize graphviz files out of the box.
 
 On that file, you'll paste the logs here :
@@ -72,8 +77,9 @@ Then, remove any line that doesn't come from your logpoint.
 Finally, you'll have to remove the file, line and column indication (and maybe the timestamp) or the messages. In my case, I typed these commands in vim to do so :
 ```
 :%s/require.js:1544:20//
+:%s/require.js:1897:12//
 :%s/\d* scripts.js:63:12//
-:%s/requirejs-config.js:56//
+:%s/requirejs-config.js:55//
 ```
 
 ## Step three : bind mixins to their module
