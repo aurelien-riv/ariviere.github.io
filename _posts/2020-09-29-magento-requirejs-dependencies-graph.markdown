@@ -26,7 +26,7 @@ Then, search for the method completeLoad and add a logpoint on *callGetModule(ar
 
 In the console output expression, paste that snippet :
 {% highlight js %}
-`"${moduleName}"` + (typeof args[1] !== "undefined" && args[1].length ? (" -> {\"" + args[1].map(e => makeModuleMap(e, makeModuleMap(moduleName, null, false), false).id).join('","') + '"}') : "")
+`"${moduleName}"` + (typeof args[1] !== "undefined" && args[1].length ? (" -> {\"" + args[1].map(e => {let m = makeModuleMap(e, makeModuleMap(moduleName, null, false), false); return (m.prefix ? m.prefix + '!' : '') + m.name;}).join('","') + '"}') : "")
 {% endhighlight %}
 
 But several modules can be located in the same file. To identify which ones implied a request, we can add that on the *req.load* function, a line 1897 for me :
@@ -40,7 +40,7 @@ On line 907, where you should find *this.defined = true;*, add that conditional 
 
 {% highlight js %}
 condition: this.depMaps.length && id.indexOf('_@r') === -1
-expression: `"${id}" -> {"` + this.depMaps.map(m => m.id).join('","') + '"}')
+expression: `"${id}" -> {"` + this.depMaps.map(m => (m.prefix ? m.prefix + '!' : '') + m.name).join('","') + '"}'
 {% endhighlight %}
 
 ### Report text/x-magento-init loaded scripts
@@ -86,7 +86,7 @@ Finally, you'll have to remove the file, line and column indication (and maybe t
 ```
 :%s/require.js:1544:20//
 :%s/require.js:1897:12//
-%s/require.js:907:24//
+:%s/require.js:907:24//
 :%s/\d* scripts.js:63:12//
 :%s/requirejs-config.js:55//
 ```
@@ -97,7 +97,6 @@ Relationships between mixins and the module they are associated are not reported
 
 {% highlight sh %}
 grep -oE 'mixins[^\"]+' requirejs-graph.dot | sort | uniq | awk '{print "\""$1"\" [shape=house]; \""$1"\" -> \""substr($1, 8)"\""}'; 
-sed -i -e 's/_unnormalized[0-9]+//g' -Ee 's/domReady![0-9]+/domReady!/g' requirejs-graph.dot
 {% endhighlight %}
 
 Add the output of that command at the end of your file, before the last curly bracket. 
