@@ -56,10 +56,11 @@ We can get that piece of information by putting a logpoint on mage/apply/scripts
 
 Some scripts will be loaded automatically by RequireJS as they are present on requirejs-config.js's config['deps'] array.
 
-Open /pub/static/[...]/frontend/[THEME]/[LANG]/requirejs-config.js and on the line that contains require.config(config);, add the following logpoint :
+Open /pub/static/[...]/frontend/[THEME]/[LANG]/requirejs/require.js again and on *req.config*, on the line that contains *return req(config);*, add the following logpoint :
 
 {% highlight js %}
-config.deps.length ? ('"requirejs.config.deps" [shape=octagon]; "requirejs.config.deps" -> {"' + config.deps.join('", "') + '"}') : ''
+condition: config.deps !== undefined && config.deps.length
+expression: '"requirejs.config.deps" [shape=octagon]; "requirejs.config.deps" -> {"' + config.deps.join('", "') + '"}'
 {% endhighlight %}
 
 ## Step two : formatting the dot file
@@ -84,11 +85,11 @@ Then, remove any line that doesn't come from your logpoint.
 
 Finally, you'll have to remove the file, line and column indication (and maybe the timestamp) or the messages. In my case, I typed these commands in vim to do so :
 ```
-:%s/require.js:1544:20//
-:%s/require.js:1897:12//
-:%s/require.js:907:24//
+:%s/\d* require.js:1544:20//
+:%s/\d* require.js:1897:12//
+:%s/\d* require.js:907:24//
+:%s/\d* require.js:1745:8//
 :%s/\d* scripts.js:63:12//
-:%s/requirejs-config.js:55//
 ```
 
 ## Step three : bind mixins to their module
