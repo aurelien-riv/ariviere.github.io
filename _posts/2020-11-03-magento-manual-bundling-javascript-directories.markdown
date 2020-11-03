@@ -12,15 +12,15 @@ tags: [requirejs, performance]
 
 ## Existing solutions
 
-Magento's JavaScript is modular, which is great for developping, but far from being efficient in production. 
-You can enable merging and bundling so you reduce the amount of file your customers will have to download, but Magento's bundling is worst than doing nothing: 
+Magento's JavaScript is modular, which is great for developing, but far from being efficient in production. 
+You can enable merging and bundling so you reduce the amount of file your customers will have to download, but Magento's bundling is worse than doing nothing: 
 it will combine your files so that all of your scripts are available from only a few but really heavy files.
 These bundles are not organized, there are not common bundles and some more specific to a given page type, such as product, category or checkout pages, and the clients will probably need all of them to run your site. The amount of transmitted data has increased, but most of the code won't be used.
 
 However, you can also try [Magento's advanced bundling](Magento's advanced bundling), which will try to solve that problem, but which also need several manual steps. 
 Third-party modules also try to achieve the same goal, with more automation, such as [Baler](magento/baler) or [Magepack](magesuite/magepack) to name but a few. 
 
-I tried to use Magepack, which looked promising, except when I started to encounter errors dued to third-party modules using non-AMD scripts, that no longer worked when called from the bundle, and when I saw there was absolutly no documentation (and probably no solution) for multi-theme stores. I then decided to make my own - basic and specific - bundler to avoid tens of downloads, but without risks, instead of trying to set up a perfect solution - which may not exist - and probably end up with no bundling at all.
+I tried to use Magepack, which looked promising, except when I started to encounter errors dued to third-party modules using non-AMD scripts, that no longer worked when called from the bundle, and when I saw there was absolutely no documentation (and probably no solution) for multi-theme stores. I then decided to make my own - basic and specific - bundler to avoid tens of downloads, but without risks, instead of trying to set up a perfect solution - which may not exist - and probably end up with no bundling at all.
 
 ## My own solution
 
@@ -28,9 +28,9 @@ Bundled files will be stored in the theme directory, in app/design. That means a
 
 The bundle file will be the main file of the group. I chose that as a convention, I don't think it would change anything if you don't follow it but that's how I did it.
 
-As the main file will contain all the bundled modules, if you wanted to override the file before bundling it, you could name of overriden module module.override.js for instance, and adapt the script accordingly, it shouldn't be hard to do.
+As the main file will contain all the bundled modules, if you wanted to override the file before bundling it, you could name the overridden module "*module.override.js*" for instance, and adapt the script accordingly, it shouldn't be hard to do.
 
-I my case I bundled *Magento\_Ui/web/js/lib/logger/console-logger.js* and *Magento\_Ui/web/js/lib/knockout/bootstrap.js* with their respective dependencies. That's what I'll show you there.
+In my case I bundled *Magento\_Ui/web/js/lib/logger/console-logger.js* and *Magento\_Ui/web/js/lib/knockout/bootstrap.js* with their respective dependencies. That's what I'll show you there.
 It's not generic, but if you understand the logic and you have a basic Bash understanding, you should be able to adapt it to other cases.
 
 ### Step 1: Combine the files
