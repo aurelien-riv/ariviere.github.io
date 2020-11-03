@@ -43,15 +43,6 @@ condition: this.depMaps.length && id.indexOf('_@r') === -1
 expression: `"${id}" -> {"` + this.depMaps.map(m => (m.prefix ? m.prefix + '!' : '') + m.name).join('","') + '"}'
 {% endhighlight %}
 
-### Report text/x-magento-init loaded scripts
-
-When the scripts are loaded using \<script type="text/x-magento-init"\> tags, it would be usefull to show in the graph why the were loaded, and the part of the DOM they are related to.
-
-We can get that piece of information by putting a logpoint on mage/apply/scripts.js on processElems(). Add that expression on the *if (selector === '\*')* line, before *addVirtual(components)* :
-{% highlight js %}
-'"' + selector + '" [shape=record];' + '"./mage-init" -> "' + selector + '" -> {"' + Object.keys(components).join('", "') + '"}'
-{% endhighlight %}
-
 ### Highlight RequireJS-config deps
 
 Some scripts will be loaded automatically by RequireJS as they are present on requirejs-config.js's config['deps'] array.
@@ -61,6 +52,32 @@ Open /pub/static/[...]/frontend/[THEME]/[LANG]/requirejs/require.js again and on
 {% highlight js %}
 condition: config.deps !== undefined && config.deps.length
 expression: '"requirejs.config.deps" [shape=octagon]; "requirejs.config.deps" -> {"' + config.deps.join('", "') + '"}'
+{% endhighlight %}
+
+### Report text/x-magento-init loaded scripts
+
+When the scripts are loaded using \<script type="text/x-magento-init"\> tags, it would be usefull to show in the graph why the were loaded, and the part of the DOM they are related to.
+
+We can get that piece of information by putting a logpoint on mage/apply/scripts.js on processElems(). Add that expression on the *if (selector === '\*')* line, before *addVirtual(components)* :
+{% highlight js %}
+'"' + selector + '" [shape=record];' + '"./mage-init" -> "' + selector + '" -> {"' + Object.keys(components).join('", "') + '"}'
+{% endhighlight %}
+
+### Report Magento\_Ui/js/core/app components
+
+Then, add these logpoints:
+
+In Magento_Ui/js/core/app.js on line 14:
+
+{% highlight js %}
+`"Magento_Ui/js/core/app" -> {"` + Object.values(data.components).map(c => c.component).join('", "') + "\"} [style=dashed]"
+{% endhighlight %}
+
+And on Magento_Ui/js/core/renderer/layout.js (initComponent) line 144:
+
+{% highlight js %}
+condition: typeof node.children !== 'undefined' && Object.values(node.children).length
+expression: `"${component.component}" -> {"` + Object.values(node.children).map(c => c.component).join('", "') + `"} [style=dashed, label="${node.name}"]`
 {% endhighlight %}
 
 ## Step two : formatting the dot file
@@ -83,13 +100,15 @@ graph [splines=polyline,ranksep=3]
 
 Then, remove any line that doesn't come from your logpoint.
 
-Finally, you'll have to remove the file, line and column indication (and maybe the timestamp) or the messages. In my case, I typed these commands in vim to do so :
+Finally, you'll have to remove the file, line and column indication (and maybe the timestamp) or the messages. I typed these commands in vim to do so (but you can use sed instead, which is more suitable for that) :
 ```
 :%s/\d* require.js:1544:20//
 :%s/\d* require.js:1897:12//
 :%s/\d* require.js:907:24//
 :%s/\d* require.js:1745:8//
 :%s/\d* scripts.js:63:12//
+:%s/\d* layout.js:144:8//
+:%s/\d* app.js:14:8//
 ```
 
 ## Step three : bind mixins to their module
