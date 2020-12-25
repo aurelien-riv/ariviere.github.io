@@ -61,7 +61,7 @@ ResourceModels share the name of their Model. That means you cannot import both 
 
 There is no real issue with repositories neither. All of them have a discernible class name, so you can import several of them without a class name collision. However, in order to clearly separate their roles, I use to put them in a Model\Repository namespace.
 
-Collection has an awful class name: you cannot import several collections on the same file without aliasing, which happens way more often than importing a model along with its resource. Plus, once imported, you simply don't know the most important thing: a collection of what? So, let stop the mess and renaming them Model\Collection\ModelnameCollection, so that everything becomes clear.
+Collection has an awful class name: you cannot import several collections on the same file without aliasing, which happens way more often than importing a model along with its resource. Plus, once imported, you simply don't know the most important thing: a collection of what? So, let stop the mess and renaming them Model\Collection\ModelnameCollection, so that everything becomes clear. If you want to use getResourceCollection (which is deprecated) from the model class, you'll have to give the entity the new FQCN of your Collection class, by calling \_setResourceModel, for instand in the \_construct method of your entity.
 
 In a nutshell:
 ```
