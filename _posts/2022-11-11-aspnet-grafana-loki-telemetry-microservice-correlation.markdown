@@ -113,7 +113,7 @@ And then, we have to add our enricher to Serilog configuration, but also to expo
 the values sent by the previous app or site of the chain.
 
 ```cs
-# Program.cs
+// Program.cs
 
 builder.Services.AddHttpContextAccessor();
 
@@ -133,7 +133,7 @@ If your project makes no HTTP requests, you can stop here, but a backend for fro
 its dependencies. To do that, we have to set the header propagation mechanism up:
 
 ```cs
-# Program.cs
+// Program.cs
 
 builder.Services.AddHeaderPropagation(options => {
     options.Headers.Add("dmc-correlation-id", context => LogAndTraceMetadata.GetCorrelationId(context.HttpContext));
