@@ -43,7 +43,7 @@ public static class LogAndTraceMetadata
             correlationId = values.FirstOrDefault();
         }
 
-        return correlationId ?? Activity.Current!.RootId ?? httpContext.TraceIdentifier;
+        return correlationId ?? Activity.Current?.RootId ?? httpContext.TraceIdentifier;
     }
 
     public static string GetRootInitiator(HttpContext httpContext)
@@ -151,5 +151,5 @@ Now, your labels should be transmitted properly, and Loki should receive them al
 
 We are sending additional fields to Loki, but they are only part of the log context, and are not indexed. That means you
 cannot query them directly, as Loki has to parse the log content first. Add the fields you want to the propertiesAsLabels 
-property in the appsettings in order to index them. Use as few fields as you can, an avoid indexing dynamic fields, such as the 
+property in the appsettings in order to index them. Use as few fields as you can, and avoid indexing dynamic fields, such as the 
 correlation id, to keep Loki fast. I currently only index App and RootInitiator.
