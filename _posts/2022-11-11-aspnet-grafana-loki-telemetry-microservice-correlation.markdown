@@ -153,3 +153,6 @@ We are sending additional fields to Loki, but they are only part of the log cont
 cannot query them directly, as Loki has to parse the log content first. Add the fields you want to the propertiesAsLabels 
 property in the appsettings in order to index them. Use as few fields as you can, and avoid indexing dynamic fields, such as the 
 correlation id, to keep Loki fast. I currently only index App and RootInitiator.
+
+We are now able to query the logs using LoqQl. On the next article, I'll share a basic Grafana dashboard to search in the
+logs with ease.
