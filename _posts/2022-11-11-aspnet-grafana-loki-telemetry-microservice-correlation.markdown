@@ -136,8 +136,8 @@ its dependencies. To do that, we have to set the header propagation mechanism up
 // Program.cs
 
 builder.Services.AddHeaderPropagation(options => {
-    options.Headers.Add("dmc-correlation-id", context => LogAndTraceMetadata.GetCorrelationId(context.HttpContext));
-    options.Headers.Add("dmc-root-initiator", context => LogAndTraceMetadata.GetRootInitiator(context.HttpContext));
+    options.Headers.Add("x-correlation-id", context => LogAndTraceMetadata.GetCorrelationId(context.HttpContext));
+    options.Headers.Add("x-root-initiator", context => LogAndTraceMetadata.GetRootInitiator(context.HttpContext));
 });
 
 //[...]
