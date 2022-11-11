@@ -1,26 +1,39 @@
 ---
 layout: default
-title: "Sending ASP.Net Core logs to Grafana Loki with microservice correlation"
-description: "Using Grafana Loki as an application log server in a microservice architecture"
-excerpt: "Let correlate our logs from multiple microservices in Loki with a correlation id"
+title: "Adding correlation metadata to our ASP.Net Core application logs"
+description: "Configuration of Serilog to link distributed application logs in a microservice architecture"
+excerpt: "Let correlate our logs from multiple microservices with a correlation id with Serilog (and optionally Loki)"
 date: 2022-11-09 23:52:00 +0200
 categories: [AspNetCore]
-tags: [AspNetCore, C#, OpenTelemetry, Grafana, Loki, Microservices]
+tags: [AspNetCore, C#, Loki, Serilog, Microservices]
 ---
 
-# Adding a correlation id to our logs sent to Loki 
+# Adding a correlation id and other metadata to our logs 
 
-In the previous post, we were able to send our logs to Loki using Serilog, which is not really useful in a monolithic 
-architecture, compared to our plain text log files. Now, let see how to share a correlation id across our http requests
-so that we can search the logs for a specific request through all the services that were consumed.
+In the previous post, we were able to send our logs to Loki using Serilog. In a monolithic application, it may be overkill,
+but in a microservice architecture, centralizing and linking our logs is mandatory to exploit them efficiently.
 
-## Getting / defining our variables
+To do so, we will enrich our logs with a correlation id and some other metadata, and forward them to subsequent http requests.
 
-First, here is my class for getting or defining my labels. 
+I'll suppose you are using Loki and have followed the previous article, but most of the content of the current post is 
+applicable to any Serilog sink.
 
-The CorrelationId is a unique identifier, passed to each http requests.
+## Wording
 
-The RootInitiator defines the first item in the chain, being either the frontend, or the api gateway / backend for frontend. 
+I'll call a module a microservice application that does not perform any http requests, and a gateway a service that 
+delegates to at least one module.
+
+When I say field, I mean a piece of information included in the log. A label is a field that is indexed by Loki. 
+If you aren't using Loki, you can consider both terms as synonyms.  
+
+## Getting / defining our additional fields
+
+First, here is my class for getting or defining my fields. 
+
+The CorrelationId is a unique identifier, passed to the subsequent http requests.
+
+The RootInitiator defines the first item in the chain, either the frontend application, the first gateway, or the module 
+itself when called through Swagger for instance, or for a console application.
 
 The AppName is the name of my startup project, but you can of course use another name.
 
@@ -63,7 +76,7 @@ public static class LogAndTraceMetadata
 }
 ```
 
-Now, we need to enrich our logs with these labels:
+Now, we need to enrich our logs with these fields:
 
 ```cs
 using Serilog.Core;
@@ -97,7 +110,9 @@ public class CorrelationIdEnricher : ILogEventEnricher
 }
 ```
 
-The App label is now defined in the enricher, so can remove the labels property from your appsettings:
+If you are using the Loki sink, as described in the previous article, you can remove the labels property from your 
+appsettings, as the App field is now defined from the enricher:
+
 ```json
 {
           "labels": [
@@ -109,8 +124,8 @@ The App label is now defined in the enricher, so can remove the labels property 
 }
 ```
 
-And then, we have to add our enricher to Serilog configuration, but also to expose the HttpContext so that we can grab 
-the values sent by the previous app or site of the chain.
+And then, we have to register our enricher to Serilog configuration, but also to expose the HttpContext so that we can
+grab the values sent by the previous application of the chain.
 
 ```cs
 // Program.cs
@@ -129,8 +144,8 @@ Now, we're done with the logger configuration.
 
 ## Transmitting our metadata to the subsequent requests
 
-If your project makes no HTTP requests, you can stop here, but a backend for frontend still has to forward its labels to
-its dependencies. To do that, we have to set the header propagation mechanism up:
+If your project is a module that makes no HTTP requests, you can stop here, but for a gateway, you still have to forward
+its log context to its dependencies. To do so, we have to set the header propagation mechanism up:
 
 ```cs
 // Program.cs
@@ -145,14 +160,16 @@ builder.Services.AddHeaderPropagation(options => {
 app.UseHeaderPropagation();
 ```
 
-Now, your labels should be transmitted properly, and Loki should receive them all.
+Now, your fields should be transmitted properly, and they should appear in your logs.
 
-## Indexing the labels
+## Indexing the fields
 
-We are sending additional fields to Loki, but they are only part of the log context, and are not indexed. That means you
-cannot query them directly, as Loki has to parse the log content first. Add the fields you want to the propertiesAsLabels 
-property in the appsettings in order to index them. Use as few fields as you can, and avoid indexing dynamic fields, such as the 
-correlation id, to keep Loki fast. I currently only index App and RootInitiator.
+We are sending additional fields to Loki, but they are only part of the log context, and are not indexed. 
+You cannot query them directly, as Loki has to parse the log content first. Add the fields you want to the propertiesAsLabels 
+property in the appsettings in order to index them. 
+
+Use as few fields as you can, and avoid indexing dynamic fields, such as the correlation id, to keep Loki fast. 
+I currently only index App and RootInitiator.
 
 We are now able to query the logs using LoqQl. On the next article, I'll share a basic Grafana dashboard to search in the
 logs with ease.

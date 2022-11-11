@@ -5,7 +5,7 @@ description: "Using Grafana Loki as an application log server"
 excerpt: "Let send our logs to Grafana Loki using Serilog"
 date: 2022-11-09 23:52:00 +0200
 categories: [AspNetCore]
-tags: [AspNetCore, C#, OpenTelemetry, Grafana, Loki]
+tags: [AspNetCore, C#, Serilog, Loki]
 ---
 
 # Sending ASP.Net Core logs to Grafana Loki
