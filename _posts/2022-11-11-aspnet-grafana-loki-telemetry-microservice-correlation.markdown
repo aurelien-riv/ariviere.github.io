@@ -144,6 +144,8 @@ Now, we're done with the logger configuration.
 
 ## Transmitting our metadata to the subsequent requests
 
+First, you'll have to install the *Microsoft.AspNetCore.HeaderPropagation* nuget package.
+
 If your project is a module that makes no HTTP requests, you can stop here, but for a gateway, you still have to forward
 its log context to its dependencies. To do so, we have to set the header propagation mechanism up:
 
