@@ -160,6 +160,15 @@ builder.Services.AddHeaderPropagation(options => {
 app.UseHeaderPropagation();
 ```
 
+And for each of your HttpClient, don't forget to enable the header propagation like this :
+
+```cs
+services.AddHttpClient("NamedClient", c =>
+    {
+        c.BaseAddress = new Uri(Options.Url);
+    }).AddHeaderPropagation();
+```
+
 Now, your fields should be transmitted properly, and they should appear in your logs.
 
 ## Indexing the fields
