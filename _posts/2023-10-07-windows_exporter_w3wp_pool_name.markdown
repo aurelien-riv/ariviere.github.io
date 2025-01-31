@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Draw W3WP process info per app pool"
+title: "Visualize W3WP process info per app pool"
 description: "Adding app pool name to windows_process w3wp without installing IIS management scripts and tools"
 excerpt: "How to plot process info such as memory consumption per app pool name without installing IIS management scripts and tools?"
 date: 2023-10-07 19:31:00 +0200
